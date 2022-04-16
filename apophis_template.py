@@ -134,7 +134,7 @@ for i in range(idAst,len(ps)):
 
 '''
 for iter,p in enumerate(ps):
-   print("  sim.add(m={}, x={}, y={}, z={}, vx={}, vy={}, vz={}, hash='{}')".format(p.m, p.x, p.y, p.z, p.vx, p.vy, p.vz,names[iter]))
+   print(f"  sim.add(m={p.m}, x={p.x}, y={p.y}, z={p.z}, vx={p.vx}, vy={p.vy}, vz={p.vz}, hash='{names[iter]}')")
 
 sys.exit(-1)
 '''
@@ -231,7 +231,7 @@ for iloop in range(npert):
     p.vz=vr[2]*1
 
   p=ps[idAst]
-  print("sim.add(m={}, x={}, y={}, z={}, vx={}, vy={}, vz={}, A2={} hash='{}')".format(p.m,p.x,p.y,p.z,p.vx,p.vy,p.vz,A2PERT,names[idAst]))
+  print(f"sim.add(m={p.m}, x={p.x}, y={p.y}, z={p.z}, vx={p.vx}, vy={p.vy}, vz={p.vz}, A2={A2PERT} hash='{names[idAst}')")
 
   rebx=reboundx.Extras(sim)
   gr=rebx.load_force("gr") # gr is the correction for just the Sun, gr_full is the correction for all bodies in the sim
@@ -273,7 +273,7 @@ for iloop in range(npert):
   ps[idAst].vy = vyp + vyp/vmag*(vpert*(iloop)+vpert0)
   ps[idAst].vz = vzp + vzp/vmag*(vpert*(iloop)+vpert0)
 
-  print("iloop {} Vpert {}cm/s vx {} vy {} vz {}".format(iloop,vcode2cmps*(vpert*(iloop)+vpert0),ps[idAst].vx,ps[idAst].vy,ps[idAst].vz))
+  print(f"iloop {iloop} Vpert {vcode2cmps*(vpert*(iloop)+vpert0)}cm/s vx {ps[idAst].vx} vy {ps[idAst].vy} vz {ps[idAst].vz}")
 
   ps[idAst].params["tau_a"]=TMAX
   ps[idAst].params["min_distance"]=1e6
@@ -408,7 +408,7 @@ for iloop in range(npert):
 
   distance=np.sqrt(np.square(x[idEarth]-x[idAst])+np.square(y[idEarth]-y[idAst]) + np.square(z[idEarth]-z[idAst]))*aukm
   idmin=np.argmin(distance)
-  print("Close approach of {} from snap shots at time {}".format(distance[idmin], times[idmin]/year)) 
+  print(f"Close approach of {distance[idmin]} from snap shots at time {times[idmin]/year}") 
 
   #if distance[idmin] < 10*Rearth: idmin-=1
   print("Using distance for asymptote of {} from snap shots at time {}".format(distance[idmin],times[idmin]/year)) 
