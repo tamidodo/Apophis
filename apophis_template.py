@@ -403,22 +403,7 @@ for iloop in range(npert):
   else:
     closeEncounterDist = ps[idAst].params["min_distance"]*aukm
     closeEncounterTime = ps[idAst].params["min_distance_time"]/year
-    print("Minimum Earth-asteroid Distance {} km at time {} yr".format(dlast*aukm, timeCloseApp/(2*np.pi )))
-
-
-  distance=np.sqrt(np.square(x[idEarth]-x[idAst])+np.square(y[idEarth]-y[idAst]) + np.square(z[idEarth]-z[idAst]))*aukm
-  idmin=np.argmin(distance)
-  print(f"Close approach of {distance[idmin]} from snap shots at time {times[idmin]/year}") 
-
-  #if distance[idmin] < 10*Rearth: idmin-=1
-  print("Using distance for asymptote of {} from snap shots at time {}".format(distance[idmin],times[idmin]/year)) 
-
-#Xsun  =np.array([x[0,idmin],y[0,idmin],z[0,idmin]])
-#Vsun  =np.array([vx[0][idmin],vy[0][idmin],vz[0][idmin]])
-#Xearth=np.array([x[idEarth,idmin],y[idEarth,idmin],z[idEarth,idmin]])
-#Vearth=np.array([vx[idEarth][idmin],vy[idEarth][idmin],vz[idEarth][idmin]])
-#Xastr =np.array([x[idAst,idmin],y[idAst,idmin],z[idAst,idmin]])
-#Vastr =np.array([vx[idAst,idmin],vy[idAst,idmin],vz[idAst,idmin]])
+    print(f"Minimum Earth-asteroid Distance {dlast*aukm} km at time {timeCloseApp/(2*np.pi )} yr")
 
 
   def dotpro(a,b):
@@ -436,7 +421,7 @@ for iloop in range(npert):
   nhat = h/np.sqrt(dotpro(h,h))
   VREL2 = dotpro(VREL,VREL)
 
-  evec = np.cross(VREL,h)/ps[idEarth].m-Xdiff/radial #(VREL2/ps[idEarth].m-1/radial)*Xdiff-dotpro(Xdiff,VREL)/ps[idEarth].m*VREL
+  evec = np.cross(VREL,h)/ps[idEarth].m-Xdiff/radial 
 
   aenc = 1./(2/radial-VREL2/ps[idEarth].m)
 
