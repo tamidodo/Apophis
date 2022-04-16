@@ -8,7 +8,7 @@ import sys
 import reboundx
 from reboundx import constants as rbxConstants
 
-SIG=3.0 # strength of normal perturbations for exploring error elipse
+SIG=3.0 # strength of normal perturbations for exploring error elipse, set to 0 for just LOV sampling
 npert=10000 # number of LOV samples
 
 vpert = -0.01/(npert) # strength and direction of incremental perturbation for LOV in m/s
