@@ -70,7 +70,7 @@ sim=rb.Simulation()
 sim.integrator = "ias15" # IAS15 is the default integrator, so we actually don't need this line but just in case that changes...
 sim.dt=0.01*DTDIRECT
 
-print(rb.units.times_SI['yr2pi'])
+#print(rb.units.times_SI['yr2pi'])
 
 # units of perturbations from JPL are in au and au/d so we need to convert the speed part. A2 in last
 pertvals=np.array([2.52210990E-09,3.80951833E-09,2.24702572E-09,5.21392275E-11,2.66039622E-11,5.29135900E-11,A2SIGPARAM])
@@ -260,7 +260,7 @@ for iloop in range(npert):
 
   ps=sim.particles
 
-  print(ps[idEarth].hash)
+  #print(ps[idEarth].hash)
 
 # for line of variations, we add an additional perturbation. This selects the direction of the asteroid and amplifies the vectors along track
   vxp=ps[idAst].vx
