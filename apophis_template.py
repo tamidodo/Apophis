@@ -344,7 +344,7 @@ for iloop in range(npert):
 
       sim.integrate(time)
       if(time%1):sim.save("checkpoint.bin")
-      if(time>=tout and PRINTOUT==1):
+      if(time>=tout):
           output=sim.particles_ascii()
           fh=open("output.ascii."+repr(iout),"w")
           fh.write(output)
