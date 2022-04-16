@@ -8,26 +8,24 @@ import sys
 import reboundx
 from reboundx import constants as rbxConstants
 
-PRINTOUT=0
-PLOTS=0
-SIG=3.0 # strength of normal perturbations for exploring error elipse. If using LOV, this is turned off, usually
-npert=1000
+SIG=3.0 # strength of normal perturbations for exploring error elipse
+npert=10000 # number of LOV samples
 
-vpert = -0.01/(npert) # strength and direction of incremental perturbation in m/s
+vpert = -0.01/(npert) # strength and direction of incremental perturbation for LOV in m/s
 vpert0 =0.0 # centre of perturbation (used to step forward with finer resolution)
 
 SEED=3205
 
-# set our ICs
+# set our initial conditions
 date="2022-01-21 00:00"
 DTDIRECT=1
 
-#solution 2021-Jun-29 11:09:44
-# SB441-N16
+#solution last updated 2021-Jun-29 11:09:44
+# small body pert ephem used: SB441-N16, planetary ephem used: DE441
 # epoch 2459600.5 (2022-Jan-21.0) TDB
 A2 = -2.901085583204654E-14	# Yarkovsky parameter
 A2SIG=1.942E-16
-betaAsteroid = 5E-13*(365.25/(2*np.pi))**2  # takes into account radiation effects other than Yarkovsy (A1??)
+betaAsteroid = 5E-13*(365.25/(2*np.pi))**2  # takes into account radiation effects other than Yarkovsy (A1)
 
 twopi=2*np.pi
 
@@ -42,11 +40,6 @@ vcode2cmps=au*sec2code
 A2PARAM = A2/( (1./365.25)*np.pi*2 )**2     # convert to code units
 A2SIGPARAM=A2SIG/( (1./365.25)*np.pi*2 )**2
 
-THRUST=0. # N/kg   # if gravity tractor is used
-#THRUST=1e-11 # N/kg
-t_thruston=7*twopi   # if gravity tractor is used, sets when the thrust turns on
-t_thrustoff=8*twopi  # if gravity tractor is used, sets when the thrust turns off
-
 Rearth=6371. # km
 Vesc = 11.186 # km/s
 
@@ -55,15 +48,16 @@ RE_eq = 6378.135/aukm
 J2=1.0826157e-3
 J4=-1.620e-6
 
-#dmin=2.83e-4# GEO
 dmin=4.326e-5 # Earth radius in au
 
-tsimend=100 # endtime in years
+tsimend=100 # simulation endtime in years
 dtout=100 # end time in years
 Noutputs = 100
-tbfreeze=7.3*2*np.pi # This is the time at which the Yarkovsky is modified due to the 2029 flyby
-tbfreeze_start = 6*2*np.pi
-tbfreeze_end = 8*2*np.pi # Bplane location is frozen after this time (so we don't keep recording b-plane coordinates on subsequent close approaches)
+tbfreeze=7.3*2*np.pi # Time of the 2029 flyby (years after the IC date * 2 pi)
+# in between tbfreeze_start and tbfreeze_end, the b-plane location is frozen for the closest approach
+# (so we don't keep recording b-plane coordinates on subsequent close approaches)
+tbfreeze_start = 6*2*np.pi # We use 6 for the 2029 b-plane, and 13 for the 2036 b-plane
+tbfreeze_end = 8*2*np.pi # We use 8 for the 2029 b-plane and 15 for the 2036 b-plane
 
 TMAX=-2.3e9
 
@@ -73,19 +67,16 @@ vpert0 = vpert0/vcode2cmps
 # add particles to sim
 
 sim=rb.Simulation()
-sim.integrator = "ias15" # IAS15 is the default integrator, so we actually don't need this line
+sim.integrator = "ias15" # IAS15 is the default integrator, so we actually don't need this line but just in case that changes...
 sim.dt=0.01*DTDIRECT
 
 print(rb.units.times_SI['yr2pi'])
 
-# units of perturbations are in au and au/d.  So we need to convert the speed part. A2 in last
+# units of perturbations from JPL are in au and au/d so we need to convert the speed part. A2 in last
 pertvals=np.array([2.52210990E-09,3.80951833E-09,2.24702572E-09,5.21392275E-11,2.66039622E-11,5.29135900E-11,A2SIGPARAM])
 
 pertvals[3:6]*=code2sec/(24*3600)
-pertvals=pertvals*SIG
-
-#covar=np.zeros([7,7])
-#for i in range(7): covar[i][i]=pertvals[i]**2
+pertvals=pertvals*SIG # scale 1 sigma perturbations to strength set in SIG variable
 
 '''
 sim.add("Sun",date=date)
@@ -153,7 +144,7 @@ np.random.seed(SEED)
 for iloop in range(npert):
 
   sim=rb.Simulation()
-  sim.integrator = "ias15" # IAS15 is the default integrator, so we actually don't need this line
+  sim.integrator = "ias15" # IAS15 is the default integrator, so we actually don't need this line but just in case that changes...
   sim.dt=0.01*DTDIRECT
 
   # epoch 2022 Jan 21
@@ -173,7 +164,6 @@ for iloop in range(npert):
   sim.add(m=1.302816826707132e-10, x=-0.2537961833901161, y=-2.1355824168206285, z=0.09394477256841491, vx=0.6993562098038364, vy=-0.09279166386497639, vz=-0.08235041357465825, hash='Vesta')
   sim.add(m=1.0345676709478846e-10, x=2.812401045506295, y=0.36637704796270953, z=-0.4944082885219968, vx=-0.24010383548267825, vy=0.43946002692246533, vz=-0.2841929607041755, hash='Pallas')
   sim.add(m=4.355281236765312e-11, x=-2.7300381318866234, y=-0.8343425932426698, z=-0.19004238743922028, vx=0.21888140147239332, vy=-0.5788909710135058, vz=0.005456775134758909, hash='Hygiea')
-# CUT HERE
   sim.add(m=1.7029300337525267e-11, x=-1.5800461164183033, y=-3.268728168345612, z=0.7103432907032581, vx=0.39220783972942, vy=-0.252158458193233, vz=-0.08510938961799432, hash='Davida')
   sim.add(m=1.650184413238068e-11, x=0.6373623438433746, y=-2.929534673640189, z=0.03511695266785033, vx=0.5162115040293073, vy=0.20741068738203866, vz=0.16992767076506538, hash='Interamnia')
   sim.add(m=1.582368615433764e-11, x=-2.9772548882483507, y=-0.6267852318419523, z=-0.6196716972094697, vx=0.0736014757862834, vy=-0.5116841604257653, vz=-0.02728106698265056, hash='Eunomia')
@@ -200,7 +190,7 @@ for iloop in range(npert):
 
   Nbod=sim.N
 
-  # multivar = np.random.multivariate_normal(np.zeros(7),covar)
+# Drawing perturbations evenly from the uncertainty ellipsoid
   multivar = []
   rad_u = (np.random.uniform(0.0,1.0))**(1/3)
   phi_u = np.random.uniform(0.0, 2*np.pi)
@@ -244,15 +234,12 @@ for iloop in range(npert):
   print("sim.add(m={}, x={}, y={}, z={}, vx={}, vy={}, vz={}, A2={} hash='{}')".format(p.m,p.x,p.y,p.z,p.vx,p.vy,p.vz,A2PERT,names[idAst]))
 
   rebx=reboundx.Extras(sim)
-  gr=rebx.load_force("gr")
+  gr=rebx.load_force("gr") # gr is the correction for just the Sun, gr_full is the correction for all bodies in the sim
   rebx.add_force(gr)
   gr.params["c"] = rbxConstants.C
 
-  mig=rebx.load_force("modify_orbits_forces") # comment out for A2 = 0
+  mig=rebx.load_force("modify_orbits_forces")
   rebx.add_force(mig)
-
-  trc=rebx.load_force("tractor")
-  rebx.add_force(trc)
 
   gh = rebx.load_force("gravitational_harmonics")
   rebx.add_force(gh)
@@ -343,6 +330,8 @@ for iloop in range(npert):
   timeCloseApp=0.
   # flybypassed=0
   for i,time in enumerate(times):
+      # Uncomment line 331 and the block below to modify Yarkovsky effect in 2029 by instantaneously scaling A2PERT
+      # Note that we can't scale it to 0 because we can't divide by 0 but we can make it really small
       '''
       if flybypassed == 0:
           if time > tbfreeze:
@@ -352,10 +341,6 @@ for iloop in range(npert):
       dadt = 2.*A2PERT/(ps[idAst].n*ps[idAst].a**2*(1.-ps[idAst].e**2))
       TMAX = ps[idAst].a/dadt
       ps[idAst].params["tau_a"]=TMAX
-
-      if time >=t_thruston:
-          if time < t_thrustoff: ps[idAst].params["atractor"]=THRUST*code2sec**2/rb.units.lengths_SI['au']
-          else: ps[idAst].params["atractor"]=0.
 
       sim.integrate(time)
       if(time%1):sim.save("checkpoint.bin")
@@ -406,11 +391,6 @@ for iloop in range(npert):
 
   dminafter=np.array(dminafter)
   tdminafter=np.array(tdminafter)
-
-#  import matplotlib.pylab as plt
-#  plt.figure()
-#  plt.plot(times/twopi,a_asteroid)
-#  plt.show()
 
   impact=-1
   try: tcol=ps[idEarth].lastcollision/(year)
@@ -502,5 +482,5 @@ for iloop in range(npert):
   minDistAfter=dminafter[id]*aukm
   tminDistAfter=tdminafter[id]*code2sec/(365.25*24*3600)
 
-  print("B-plane distance {} Zeta {} Xi {} Rimpact {} minDistAfter {} tminDistAfter {} Vinf {} [km or km/s] CorrectPrediction{}".format(minDist,Zeta,Xi,Rimpact,minDistAfter,tminDistAfter,Vinf,CorrectPrediction))
+  print(f"B-plane distance {minDist} Zeta {Zeta} Xi {Xi} Rimpact {Rimpact} minDistAfter {minDistAfter} tminDistAfter {tminDistAfter} Vinf {Vinf} [km or km/s] CorrectPrediction{CorrectPrediction}")
 
