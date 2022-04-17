@@ -29,5 +29,5 @@ The masses of the asteroids used (in solar masses) are printed once before start
 * The minimum distance between Apophis and Earth in the `tbfreeze_start` - `tbfreeze_end` time range and the time at which that distance is achieved (this is where the b-plane is frozen in)
 * The distance and the zeta and xi coordinate on the frozen in b-plane for the location that Apophis passes through for that close approach
 * The minimum distance after that close approach and the time at which that distance is achieved
-* The velocity of Apophis at "infinity" that's used to determine the b-plane orientation (since the b-plane is normal to `Vinf`
+* The incoming velocity of Apophis relative to Earth which is used to determine the b-plane orientation and evaluate the Earth's impact radius including gravitational focusing (`Vinf`)
 * Correct Prediction which is just a sanity check of the Rebound collision predictor vs our distance/radius of impact calculations where 1 indicates agreement and 0 means we should probably check our calculations)
