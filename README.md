@@ -1,9 +1,9 @@
-# apophis
-## Rebound/ReboundX Code for Close Approach Structure Analysis of Apophis
+# Apophis
+## REBOUND/REBOUNDx Code for Close Approach Structure Analysis of Apophis
 
 Tam Q. Do April 16, 2022
 
-This repository houses the code used for my Honours Thesis project investigating the possible orbital evolution of the asteroid 99942 Apophis. All code is written in `python`, primarily using the N-body integration package `Rebound` and the extra physics add-on package `ReboundX`. 
+This repository houses the code used for my Honours Thesis project investigating the possible orbital evolution of the asteroid 99942 Apophis. All code is written in `python`, primarily using the N-body integration package `REBOUND` and the extra physics add-on package `REBOUNDx`. 
 
 ### apophis_template.py
 This script is the main script used to run long-term integrations of Apophis' possible orbital trajectories using the LOV sampling method (with the possibility of evenly sampling its 7-dimensional uncertainty ellipsoid). For each simulation run, it prints useful information that can be used for mapping the close approach structure on a specific b-plane (more details on the output log can be found in [Output Log](#output-log)). For high-fidelity simulations, it considers 
