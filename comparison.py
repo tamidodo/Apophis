@@ -188,8 +188,6 @@ sim.particles[idLuna].r=dmin/4 # set size of Earth
 
 ps=sim.particles
 
-print(ps[idEarth].hash)
-
 ps[idAst].params["tau_a"]=TMAX
 ps[idAst].params["min_distance"]=1e6
 ps[idAst].params["min_distance_from_id"] = 0
