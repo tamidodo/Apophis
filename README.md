@@ -6,7 +6,7 @@ Tam Q. Do April 16, 2022
 This repository houses the code used for my Honours Thesis project investigating the possible orbital evolution of the asteroid 99942 Apophis. All code is written in `python`, primarily using the N-body integration package `REBOUND` and the extra physics add-on package `REBOUNDx`. 
 
 ### apophis_template.py
-This script is the main script used to run long-term integrations of Apophis' possible orbital trajectories using the LOV sampling method (with the possibility of evenly sampling its 7-dimensional uncertainty ellipsoid). For each simulation run, it prints useful information that can be used for mapping the close approach structure on a specific b-plane (more details on the output log can be found in [Output Log](#output-log)). For high-fidelity simulations, it considers 
+This script is the main script used to run long-term integrations of Apophis' possible orbital trajectories using the LOV sampling method (with the possibility of evenly sampling its 7-dimensional uncertainty ellipsoid). For each simulation run, it prints useful information that can be used for mapping the close approach structure on a specific b-plane (more details on the output log can be found [here](#output-log) and details of the analysis are found [here](#simulation-analysis)). For high-fidelity simulations, it considers 
 * The gravitational perturbations from the Sun, Moon, planets in our Solar System, and 25 asteroids with the largest gravitational effect on Apophis
 * The gravitational harmonics J2 and J4 due to the Earth's oblateness
 * The radiation pressure force and Yarkovksy effect
@@ -42,3 +42,15 @@ The masses of the asteroids used (in solar masses) are printed once before start
 * The minimum distance after that close approach and the time at which that distance is achieved
 * The incoming velocity of Apophis relative to Earth which is used to determine the b-plane orientation and evaluate the Earth's impact radius including gravitational focusing (`Vinf`)
 * Correct Prediction which is just a sanity check of the Rebound collision predictor vs our distance/radius of impact calculations where 1 indicates agreement and 0 means we should probably check our calculations)
+
+### Simulation Analysis
+The Jupyter notebook used for analyzing the simulations is included in this repository to reproduce the figures and values presented in the written thesis. In cell order, the notebook is used for:
+* Reading and parsing the raw output logs to pull the relevant information into lists
+* Combining simulation runs; the along track velocity perturbation runs were done separately to the against track velocity perturbations so one list just needs to be appended to the other, and for the velocity perturbation analysis, we combine the x,y,z components of the velocity into one magnitude of the total velocity vector
+* We plot the histogram of initial particle velocities, fit a Gaussian to the histogram and print the information about the range, mean and dispersion
+* We plot the 2036 close approach structures for the modified and unmodified Yarkovsky cases for comparison, alongside the differences in minimum distance between the two modified cases and unmodified case
+* We compare the shift in nominal zeta from modifying the Yarkovsky effect with the shifts that occur under different scenarios
+* We plot the 2029 close approach structure for the unmodified Yarkovsky case with only LOV sampling
+* We characterize the resonant spikes on the 2029 b-plane, including details about the closest approach per spike, delta zeta location for the spike, predicted date of the close approach and number of asteroids that resolve that spike
+* We plot the 2036 close approach structure for the unmodified Yarkovsky case
+* We characterize the resonant spikes on the 2036 b-plane the same way we did for the 2029 b-plane except within a range of -3 to +3 million km from the nominal zeta and lowering the threshold for what we consider a close approach to half of what we used for 2029
