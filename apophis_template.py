@@ -57,7 +57,7 @@ tbfreeze=7.3*2*np.pi # Time of the 2029 flyby (years after the IC date * 2 pi)
 # in between tbfreeze_start and tbfreeze_end, the b-plane location is frozen for the closest approach
 # (so we don't keep recording b-plane coordinates on subsequent close approaches)
 tbfreeze_start = 6*2*np.pi # We use 6 for the 2029 b-plane, and 13 for the 2036 b-plane
-tbfreeze_end = 8*2*np.pi # We use 8 for the 2029 b-plane and 15 for the 2036 b-plane
+tbfreeze_end = 9*2*np.pi # We use 9 for the 2029 b-plane and 15 for the 2036 b-plane
 
 TMAX=-2.3e9
 
